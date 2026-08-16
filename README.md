@@ -376,9 +376,9 @@ I am interested in opportunities related to:
 
 **Junior SOC Analyst · SOC Analyst L1 · Security Operations · Blue Team · Cybersecurity**
 
-* 💼 LinkedIn: **[Add your LinkedIn profile]**
-* 📧 Email: **[Add your professional email]**
-* 🐙 GitHub: **[Add your GitHub profile]**
+* 💼 LinkedIn: **www.linkedin.com/in/pawan765**
+* 📧 Email: **pawanshah765@gmail.com**
+* 🐙 GitHub: **https://github.com/Pawan-Shah07**
 
 ---
 
