@@ -33,5 +33,5 @@ The lab focuses on:
 The lab is built using VMware Workstation 17 Pro and consists of separate WAN and LAN networks.
 
 ```text
-![Alt Text](01-Projects/Virtual-SOC-Lab-Using-Wazuh/SOC lab architecture.png)
+![image alt](https://github.com/Pawan-Shah07/SOC-Analyst-Portfolio/blob/6decdb7aed3c694ab667fe37e8cc55b953acf4ff/01-Projects/Virtual-SOC-Lab-Using-Wazuh/architecture/SOC%20lab%20architecture.png)
 
