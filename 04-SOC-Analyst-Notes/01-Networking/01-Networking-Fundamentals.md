@@ -32,7 +32,11 @@ security monitoring, alert triage, network investigation, and incident response.
 
 ## What is a Computer Network?
 
-Content will be added here.
+A computer network is a group of two or more devices that are connected so they can communicate and exchange data or share resources with each other.
+
+These devices can include Computers, Servers, Smartphones, Routers, Switches, Firewalls, Printers, and IoT devices
+
+Communication can occur through wired connections such as Ethernet or wireless connections such as Wi-Fi.
 
 ## Why Networking Matters in SOC
 
