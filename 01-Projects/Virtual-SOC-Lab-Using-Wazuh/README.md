@@ -33,37 +33,5 @@ The lab focuses on:
 The lab is built using VMware Workstation 17 Pro and consists of separate WAN and LAN networks.
 
 ```text
-                           Internet
-                              │
-                              ▼
-                     ┌─────────────────┐
-                     │ VMware vmnet8    │
-                     │ NAT / WAN        │
-                     │ 172.16.10.0/24   │
-                     └────────┬────────┘
-                              │
-               ┌──────────────┴──────────────┐
-               │                             │
-               ▼                             ▼
-       ┌───────────────┐             ┌───────────────┐
-       │   Kali Linux  │             │    pfSense    │
-       │   Attacker    │             │   Firewall    │
-       │ 172.16.10.130 │             │ WAN: .128     │
-       └───────────────┘             └───────┬───────┘
-                                             │
-                                             │
-                              ┌──────────────┴──────────────┐
-                              │ VMware vmnet2               │
-                              │ Host-only / Internal LAN    │
-                              │ 192.168.10.0/24             │
-                              └──────────────┬──────────────┘
-                                             │
-                         ┌───────────────────┴──────────────────┐
-                         │                                      │
-                         ▼                                      ▼
-                ┌─────────────────┐                    ┌─────────────────┐
-                │    Windows 10   │                    │ Ubuntu Server   │
-                │    Victim       │                    │ Wazuh Manager  │
-                │ 192.168.10.100  │                    │ 192.168.10.101 │
-                │  Wazuh Agent    │                    │                 │
-                └─────────────────┘                    └─────────────────┘
+<img width="502" height="562" alt="SOC lab architecture" src="https://github.com/user-attachments/assets/5dee8928-ccac-4d27-b9e8-b8c061064fa3" />
+
