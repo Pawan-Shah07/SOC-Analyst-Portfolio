@@ -1,44 +1,35 @@
 # Networking Fundamentals
 
-> Practical networking fundamentals for a Junior SOC Analyst.
+This lesson covers the core networking concepts required to understand how devices communicate and how network traffic is structured.
 
-## Overview
+## Table of Contents
 
-This note covers the fundamental networking concepts required for
-security monitoring, alert triage, network investigation, and incident response.
-
-## Contents
-
-- [What is a Computer Network?](#what-is-a-computer-network)
-- [Why Networking Matters in SOC](#why-networking-matters-in-soc)
-- [Network Components](#network-components)
-- [How Network Communication Works](#how-network-communication-works)
-- [Network Types](#network-types)
-- [Client-Server vs Peer-to-Peer](#client-server-vs-peer-to-peer)
-- [Network Addressing](#network-addressing)
-- [MAC Address vs IP Address](#mac-address-vs-ip-address)
-- [Ports and Protocols](#ports-and-protocols)
-- [Packets and Frames](#packets-and-frames)
-- [Inbound vs Outbound Traffic](#inbound-vs-outbound-traffic)
-- [Internal vs External Traffic](#internal-vs-external-traffic)
-- [Unicast, Broadcast and Multicast](#unicast-broadcast-and-multicast)
-- [Basic Network Traffic Flow](#basic-network-traffic-flow)
-- [SOC-Relevant Network Concepts](#soc-relevant-network-concepts)
-- [Common Network Security Threats](#common-network-security-threats)
-- [Useful Networking Commands](#useful-networking-commands)
-- [SOC Analyst Takeaways](#soc-analyst-takeaways)
+* [What is a Computer Network?](#what-is-a-computer-network)
+* [Why Networking Matters in SOC](#why-networking-matters-in-soc)
+* [Network Components](#network-components)
+* [How Network Communication Works](#how-network-communication-works)
+* [Network Types](#network-types)
+* [Client-Server vs Peer-to-Peer](#client-server-vs-peer-to-peer)
+* [Network Addressing](#network-addressing)
+* [MAC Address vs IP Address](#mac-address-vs-ip-address)
+* [Ports and Protocols](#ports-and-protocols)
+* [Packets and Frames](#packets-and-frames)
+* [Inbound vs Outbound Traffic](#inbound-vs-outbound-traffic)
+* [Internal vs External Traffic](#internal-vs-external-traffic)
+* [Unicast, Broadcast and Multicast](#unicast-broadcast-and-multicast)
+* [Basic Network Traffic Flow](#basic-network-traffic-flow)
+* [SOC-Relevant Network Concepts](#soc-relevant-network-concepts)
+* [Common Network Security Threats](#common-network-security-threats)
+* [Useful Networking Commands](#useful-networking-commands)
+* [SOC Analyst Takeaways](#soc-analyst-takeaways)
 
 ---
 
 ## What is a Computer Network?
 
-# Lesson 1 — Computer Network Fundamentals
+A **computer network** is a collection of two or more devices connected so that they can communicate, exchange data, and share resources.
 
-## 1. What is a Computer Network?
-
-A **computer network** is a collection of two or more computing devices that are connected so they can communicate, exchange data, and share resources.
-
-Examples of network-connected devices include:
+Network-connected devices can include:
 
 * Computers
 * Laptops
@@ -48,7 +39,7 @@ Examples of network-connected devices include:
 * Routers
 * Switches
 * Firewalls
-* Access points
+* Wireless access points
 * IoT devices
 
 ### Example
@@ -63,54 +54,59 @@ Server ───────┘
 
 ### Main purposes of a network
 
-A computer network allows devices to:
-
-1. Communicate with one another
-2. Share files
-3. Share hardware, such as printers
-4. Access applications and services
-5. Access the Internet
-6. Share resources
-7. Exchange information
+* Communication between devices
+* File sharing
+* Hardware sharing
+* Application and service access
+* Internet access
+* Resource sharing
+* Data exchange
 
 ---
 
-## 2. How Network Communication Works
+## Why Networking Matters in SOC
 
-When one device wants to communicate with another device, information is transmitted through the network.
+Networking is a core skill for a SOC analyst because many security events involve network communication.
 
-For example, a computer may communicate with a web server:
+A SOC analyst may investigate information such as:
 
 ```text
-Client Computer
-192.168.10.10
-      │
-      │ Request
-      ▼
-   Network
-      │
-      ▼
-Web Server
-192.168.10.50
-      │
-      │ Response
-      ▼
-Client Computer
+Source IP:        192.168.10.20
+Destination IP:   8.8.8.8
+Protocol:         UDP
+Destination Port: 53
+Timestamp:        12:30:15
 ```
 
-The client sends a request, and the server sends a response.
+Understanding networking helps an analyst determine:
 
-This communication is controlled by a set of rules called **network protocols**.
+* Which system generated the traffic
+* Where the traffic is going
+* Which protocol is being used
+* Which service or port is involved
+* Whether the communication is internal or external
+* Whether the activity is expected or suspicious
+
+Networking knowledge is especially important when working with:
+
+* Firewall logs
+* DNS logs
+* IDS/IPS alerts
+* Network traffic captures
+* SIEM events
+* Proxy logs
+* Authentication events
+* Endpoint telemetry
 
 ---
 
-## 3. Network Devices
+## Network Components
 
-Different devices perform different functions within a network.
+A network is made up of different components that perform different functions.
 
-### 3.1 Host
+### Host
 
-A **host** is any device connected to a network that can communicate over that network.
+A **host** is a device connected to a network that can communicate over that network.
 
 Examples:
 
@@ -118,26 +114,14 @@ Examples:
 * Laptop
 * Server
 * Smartphone
-* Network printer
 * Virtual machine
-
-Example:
-
-```text
-Windows PC
-    │
-    └── Network
-```
-
-The Windows PC is a host.
-
-A host normally has a network identity, such as an IP address, that allows it to communicate with other devices.
+* Network printer
 
 ---
 
-## 4. Client
+### Client
 
-A **client** is a device or application that requests a service from another system.
+A **client** is a system or application that requests a service from another system.
 
 Example:
 
@@ -146,92 +130,53 @@ Web Browser ───────→ Web Server
    Client             Server
 ```
 
-The web browser acts as the client because it requests information from the web server.
+Examples:
 
-Examples of clients include:
-
-* Web browsers
-* Email applications
-* FTP clients
-* SSH clients
-* Mobile applications
-
-A client does not necessarily have to be a physical computer. An application running on a computer can also function as a client.
+* Web browser
+* Email application
+* SSH client
+* FTP client
+* Mobile application
 
 ---
 
-## 5. Server
+### Server
 
-A **server** is a system that provides services or resources to other systems called clients.
+A **server** is a system that provides services or resources to clients.
 
-Example:
+Examples:
 
-```text
-Client 1 ───┐
-Client 2 ───┼──→ Web Server
-Client 3 ───┘
-```
-
-The web server receives requests from clients and provides the requested content.
-
-### Examples of servers
-
-| Server                | Main purpose                           |
+| Server                | Purpose                                |
 | --------------------- | -------------------------------------- |
 | Web Server            | Provides websites and web applications |
 | DNS Server            | Resolves domain names to IP addresses  |
-| DHCP Server           | Assigns network configuration          |
+| DHCP Server           | Provides network configuration         |
 | File Server           | Provides files                         |
-| Mail Server           | Handles email services                 |
+| Mail Server           | Handles email                          |
 | Database Server       | Provides database services             |
 | Authentication Server | Handles authentication                 |
 
-A server can provide services to one client or many clients simultaneously.
+---
+
+### Switch
+
+A **switch** connects devices within a local network and forwards Ethernet frames to the appropriate destination.
+
+```text
+PC 1 ───┐
+PC 2 ───┤
+PC 3 ───┼── Switch
+Server ──┤
+Printer ─┘
+```
+
+A switch primarily uses **MAC addresses** when forwarding Ethernet frames.
 
 ---
 
-## 6. Client-Server Communication
+### Router
 
-A basic client-server communication process looks like this:
-
-```text
-Client
-  │
-  │ Request
-  ▼
-Server
-  │
-  │ Response
-  ▼
-Client
-```
-
-### Example
-
-When a user visits a website, the browser acts as the client and requests content from the web server.
-
-```text
-Browser
-(Client)
-   │
-   │ HTTP/HTTPS Request
-   ▼
-Web Server
-   │
-   │ HTTP/HTTPS Response
-   ▼
-Browser
-```
-
-This request-response model is fundamental to many network applications.
-
----
-
-## 7. Router
-
-A **router** is a networking device that connects different networks and forwards packets between them.
-
-Example:
+A **router** connects different networks and forwards packets between them.
 
 ```text
 Network A
@@ -245,93 +190,19 @@ Network B
 192.168.20.0/24
 ```
 
-The router allows devices on Network A to communicate with devices on Network B.
+A router commonly performs functions such as:
 
-### Router functions
-
-A router can:
-
-* Connect different networks
-* Forward packets
-* Select paths for traffic
-* Separate broadcast domains
-* Provide routing between networks
-* Often perform NAT
-* Often provide basic network services
-
-Example:
-
-```text
-Home Network
-192.168.1.0/24
-       │
-       ▼
-     Router
-       │
-       ▼
-    Internet
-```
-
-The router acts as the connection point between the internal network and the external network.
+* Packet forwarding
+* Routing
+* Network-to-network communication
+* NAT
+* Interconnection between internal and external networks
 
 ---
 
-## 8. Switch
+### Firewall
 
-A **network switch** is a device used to connect multiple devices within a local network.
-
-Example:
-
-```text
-PC 1 ───┐
-PC 2 ───┤
-PC 3 ───┼── Switch
-Server ──┤
-Printer ─┘
-```
-
-A switch forwards Ethernet frames to the appropriate device.
-
-Switches primarily operate at **Layer 2 of the OSI model**, although modern switches can also provide Layer 3 functionality.
-
-### Important characteristic
-
-A switch uses **MAC addresses** to determine where Ethernet frames should be forwarded.
-
-MAC addresses will be studied in a later lesson.
-
----
-
-## 9. Router vs Switch
-
-Router and switch are different networking devices.
-
-| Feature           | Switch                           | Router                                     |
-| ----------------- | -------------------------------- | ------------------------------------------ |
-| Main purpose      | Connect devices within a network | Connect different networks                 |
-| Main addressing   | MAC address                      | IP address                                 |
-| Typical OSI layer | Layer 2                          | Layer 3                                    |
-| Example           | Connect PCs to a LAN             | Connect LAN to another network or Internet |
-
-Example:
-
-```text
-PC1 ──┐
-PC2 ──┼── Switch ─── Router ─── Internet
-PC3 ──┘
-```
-
-The switch connects local devices.
-
-The router connects the local network to another network.
-
----
-
-## 10. Firewall
-
-A **firewall** is a security device or software that controls network traffic based on defined rules.
-
-Example:
+A **firewall** controls network traffic according to configured security rules.
 
 ```text
 Internet
@@ -343,115 +214,457 @@ Firewall
 Internal Network
 ```
 
-A firewall may allow or block traffic based on:
+Firewall decisions can be based on:
 
-* Source IP address
-* Destination IP address
+* Source IP
+* Destination IP
 * Source port
 * Destination port
 * Protocol
-* Direction of traffic
+* Direction
 * Interface
 * Connection state
-* Application or service, depending on the firewall
+* Application, depending on firewall capabilities
 
-### Example firewall rule
+---
+
+## How Network Communication Works
+
+When one device communicates with another, information is transmitted according to networking protocols.
+
+A basic communication model is:
 
 ```text
-Source:        192.168.10.0/24
-Destination:   Any
-Protocol:      TCP
-Port:          443
-Action:        Allow
+Client
+  │
+  │ Request
+  ▼
+Server
+  │
+  │ Response
+  ▼
+Client
 ```
 
-Another example:
+For example, when a browser accesses a web server:
 
 ```text
-Source:        Any
-Destination:   Internal Network
-Port:          23
-Action:        Block
+Browser
+(Client)
+   │
+   │ HTTPS Request
+   ▼
+Web Server
+   │
+   │ HTTPS Response
+   ▼
+Browser
 ```
 
-The exact firewall rules depend on the network's security requirements.
+Network communication involves several important pieces of information:
+
+```text
+Source
+   ↓
+Destination
+   ↓
+Protocol
+   ↓
+Port
+   ↓
+Data
+```
 
 ---
 
-## 11. Network Protocol
+## Network Types
 
-A **network protocol** is a defined set of rules that determines how devices communicate.
+Networks can be classified by geographical coverage, communication method, or purpose.
 
-Different protocols perform different tasks.
+### PAN — Personal Area Network
 
-| Protocol | Purpose                                                      |
-| -------- | ------------------------------------------------------------ |
-| IP       | Provides logical addressing and packet delivery              |
-| TCP      | Provides reliable, connection-oriented transport             |
-| UDP      | Provides connectionless transport                            |
-| ARP      | Resolves an IPv4 address to a MAC address on a local network |
-| DNS      | Resolves domain names to IP addresses                        |
-| DHCP     | Automatically provides network configuration                 |
-| HTTP     | Transfers web content                                        |
-| HTTPS    | Transfers web content using TLS protection                   |
-| ICMP     | Used for network diagnostics and control messages            |
+A **PAN** covers a very small area around an individual.
 
-Protocols allow different devices and operating systems to communicate using standardized rules.
+Examples:
 
----
+* Smartphone and smartwatch
+* Bluetooth headphones
+* Wireless keyboard
+* Smartphone and laptop using Bluetooth
 
-## 12. Why Protocols Are Necessary
-
-Protocols provide a common set of rules for network communication.
-
-Without agreed rules, devices would not know how to correctly interpret transmitted information.
-
-Protocols define things such as:
-
-* How communication begins
-* How data is formatted
-* How information is addressed
-* How errors are handled
-* How communication ends
-* How devices interpret information
-
-Therefore, protocols provide a common language for network communication.
+```text
+             Smartphone
+                 │
+          Bluetooth / USB
+                 │
+        ┌────────┴────────┐
+        │                 │
+     Laptop            Smartwatch
+```
 
 ---
 
-## 13. Data Transmission
+### LAN — Local Area Network
 
-When data is sent across a network, it is processed into smaller units as it moves through the networking stack.
+A **LAN** connects devices within a relatively small area.
 
-At different layers, these units have different names.
+Examples:
+
+* Home
+* Office
+* School laboratory
+* Building
+
+```text
+PC 1 ───┐
+PC 2 ───┤
+PC 3 ───┼── Switch ─── Router
+Printer ─┘
+```
+
+---
+
+### WLAN — Wireless Local Area Network
+
+A **WLAN** is a LAN in which devices connect wirelessly, typically using Wi-Fi.
+
+```text
+Laptop ─── Wi-Fi ─── Access Point ─── Switch
+```
+
+WLAN is a type of LAN based on the wireless connection method.
+
+---
+
+### MAN — Metropolitan Area Network
+
+A **MAN** covers a larger area than a LAN but generally smaller than a WAN.
+
+It may connect multiple buildings or LANs across a city or metropolitan area.
+
+```text
+Building A ─────┐
+                │
+Building B ─────┼──── Metropolitan Network
+                │
+Building C ─────┘
+```
+
+---
+
+### WAN — Wide Area Network
+
+A **WAN** connects networks across large geographical distances.
+
+Examples:
+
+* Multiple cities
+* Multiple countries
+* Global corporate networks
+
+```text
+Office A
+Kathmandu
+    │
+    └──── WAN ──── Office B
+                   Delhi
+                         │
+                         └──── Office C
+                                London
+```
+
+---
+
+### Internet
+
+The **Internet** is a global system of interconnected networks.
+
+It is not one single physical network. It consists of many networks operated by organizations such as:
+
+* Internet service providers
+* Businesses
+* Universities
+* Governments
+* Cloud providers
+
+---
+
+### Intranet
+
+An **intranet** is a private network used within an organization.
+
+Examples:
+
+* Internal websites
+* Employee portals
+* Internal applications
+* Internal file services
+
+---
+
+### Extranet
+
+An **extranet** provides controlled access to selected organizational resources for authorized external users.
+
+Examples:
+
+* Supplier portals
+* Partner portals
+* Vendor access systems
+
+### Quick comparison
+
+| Type     | Description                                               |
+| -------- | --------------------------------------------------------- |
+| PAN      | Personal-area network                                     |
+| LAN      | Local-area network                                        |
+| WLAN     | Wireless local-area network                               |
+| MAN      | Metropolitan-area network                                 |
+| WAN      | Wide-area network                                         |
+| Internet | Global interconnected networks                            |
+| Intranet | Private internal organizational network                   |
+| Extranet | Private network/resources with controlled external access |
+
+---
+
+## Client-Server vs Peer-to-Peer
+
+### Client-Server Model
+
+In the **client-server model**, clients request services from centralized servers.
+
+```text
+Client 1 ───┐
+Client 2 ───┼──→ Server
+Client 3 ───┘
+```
+
+Examples:
+
+* Browser → Web server
+* Computer → File server
+* Client → Database server
+* Computer → Authentication server
+
+### Advantages
+
+* Centralized management
+* Centralized security controls
+* Easier administration
+* Centralized data storage
+* Easier backup and monitoring
+
+---
+
+### Peer-to-Peer Model
+
+In a **peer-to-peer (P2P)** network, devices can communicate directly and can act as both clients and servers.
+
+```text
+Peer A ───── Peer B
+  │ \         / │
+  │   \     /   │
+  └──── Peer C ─┘
+```
+
+Each peer can provide resources to another peer.
+
+### Advantages
+
+* Simple for small environments
+* No dedicated central server required
+* Direct resource sharing
+
+### Comparison
+
+| Feature        | Client-Server         | Peer-to-Peer                     |
+| -------------- | --------------------- | -------------------------------- |
+| Central server | Usually present       | Not required                     |
+| Management     | Centralized           | Distributed                      |
+| Scalability    | Generally better      | More limited                     |
+| Administration | Easier centrally      | More difficult as size increases |
+| Example        | Corporate application | Small file-sharing network       |
+
+---
+
+## Network Addressing
+
+Network addressing allows devices and interfaces to be identified and located for communication.
+
+Two important addressing concepts are:
+
+* **MAC address**
+* **IP address**
+
+A system may have both.
+
+```text
+Device
+  │
+  ├── MAC Address
+  │
+  └── IP Address
+```
+
+---
+
+### IPv4 Address
+
+An IPv4 address is a 32-bit logical address usually written in dotted-decimal notation.
+
+Example:
+
+```text
+192.168.10.20
+```
+
+It consists of four octets:
+
+```text
+192 . 168 . 10 . 20
+```
+
+Each octet ranges from `0` to `255`.
+
+IPv4 addressing will be studied in greater detail in a later lesson.
+
+---
+
+### IPv6 Address
+
+IPv6 uses 128-bit addresses.
+
+Example:
+
+```text
+2001:db8::1
+```
+
+IPv6 was developed to provide a much larger address space than IPv4.
+
+---
+
+## MAC Address vs IP Address
+
+### MAC Address
+
+A **MAC address** is a link-layer address associated with a network interface.
+
+Example:
+
+```text
+00:1A:2B:3C:4D:5E
+```
+
+MAC addresses are commonly used for local Ethernet communication.
+
+---
+
+### IP Address
+
+An **IP address** is a logical network-layer address.
+
+Example:
+
+```text
+192.168.10.20
+```
+
+IP addresses can change depending on the network configuration.
+
+### Comparison
+
+| Feature                 | MAC Address                    | IP Address                 |
+| ----------------------- | ------------------------------ | -------------------------- |
+| Layer                   | Data Link                      | Network                    |
+| Purpose                 | Local interface identification | Logical network addressing |
+| Example                 | `00:1A:2B:3C:4D:5E`            | `192.168.10.20`            |
+| Usually associated with | Network interface              | Network configuration      |
+| Commonly used by        | Switches                       | Routers and hosts          |
+
+### Simple concept
+
+```text
+MAC → Local network/interface addressing
+IP  → Logical network addressing
+```
+
+---
+
+## Ports and Protocols
+
+### Port
+
+A **port** is a numerical identifier used to identify a network service endpoint.
+
+Example:
+
+```text
+192.168.10.20:443
+```
+
+Where:
+
+* `192.168.10.20` = IP address
+* `443` = port
+
+### Common ports
+
+| Port | Common service |
+| ---: | -------------- |
+|   22 | SSH            |
+|   23 | Telnet         |
+|   25 | SMTP           |
+|   53 | DNS            |
+|   80 | HTTP           |
+|  443 | HTTPS          |
+| 3389 | RDP            |
+
+---
+
+### Protocol
+
+A **protocol** is a set of rules for network communication.
+
+Common protocols include:
+
+| Protocol | Purpose                                   |
+| -------- | ----------------------------------------- |
+| IP       | Logical addressing and packet delivery    |
+| TCP      | Reliable, connection-oriented transport   |
+| UDP      | Connectionless transport                  |
+| ARP      | IPv4-to-MAC resolution on a local network |
+| DNS      | Domain-name resolution                    |
+| DHCP     | Automatic network configuration           |
+| HTTP     | Web communication                         |
+| HTTPS    | Web communication protected by TLS        |
+| ICMP     | Network diagnostic and control messages   |
+
+---
+
+## Packets and Frames
+
+Network data is processed at different layers of the networking stack.
+
+A simplified representation is:
 
 ```text
 Application Data
       ↓
-    Segment        ← TCP
+Segment        ← TCP
       ↓
-    Datagram       ← UDP
+Datagram       ← UDP
       ↓
-     Packet        ← IP
+Packet         ← IP
       ↓
-     Frame         ← Ethernet
+Frame          ← Ethernet
 ```
 
-For beginner-level understanding:
+### Packet
 
-> **A packet is a unit of data at the network layer.**
+A **packet** is a unit of data at the network layer, commonly associated with IP.
 
-The exact terminology depends on the protocol and layer being discussed.
-
----
-
-## 14. Packet
-
-A **packet** is a unit of data transmitted using a network-layer protocol such as IP.
-
-An IP packet contains information required to help deliver the packet to its destination.
-
-Conceptually:
+A simplified IP packet may contain:
 
 ```text
 +-----------------------------+
@@ -465,306 +678,645 @@ Conceptually:
 +-----------------------------+
 ```
 
-Example:
+### Frame
 
-```text
-Source IP:       192.168.10.20
-Destination IP:  8.8.8.8
-Protocol:        UDP
-Payload:         DNS-related data
-```
+A **frame** is a data unit at the data-link layer.
 
-The actual IP packet structure contains additional fields, but this simplified representation is sufficient for an introduction.
+An Ethernet frame contains information such as:
 
----
+* Source MAC address
+* Destination MAC address
+* EtherType
+* Payload
+* Frame Check Sequence
 
-## 15. Source and Destination
+### Packet vs Frame
 
-Whenever two devices communicate, there is generally a **source** and a **destination**.
-
-Example:
-
-```text
-192.168.10.20 ─────────→ 8.8.8.8
-     Source              Destination
-```
-
-The source is the system sending the traffic.
-
-The destination is the intended receiver.
-
-The direction can also be reversed:
-
-```text
-8.8.8.8 ─────────→ 192.168.10.20
- Source              Destination
-```
-
-Source and destination identify the direction of communication.
+| Feature    | Packet        | Frame           |
+| ---------- | ------------- | --------------- |
+| Layer      | Network layer | Data-link layer |
+| Addressing | IP            | MAC             |
+| Example    | IPv4 packet   | Ethernet frame  |
 
 ---
 
-## 16. Source IP Address
+## Inbound vs Outbound Traffic
 
-A **source IP address** identifies the IP address associated with the sender of a packet.
+Traffic direction is commonly described from the perspective of a particular network, host, or security boundary.
 
-Example:
+### Inbound Traffic
+
+**Inbound traffic** is traffic entering a system or network.
 
 ```text
-Source IP: 192.168.10.20
+Internet
+   │
+   ▼
+Firewall
+   │
+   ▼
+Internal Host
 ```
 
-This indicates that the packet has a source address of `192.168.10.20`.
+For the internal network, the traffic is inbound.
+
+### Outbound Traffic
+
+**Outbound traffic** is traffic leaving a system or network.
+
+```text
+Internal Host
+     │
+     ▼
+ Firewall
+     │
+     ▼
+  Internet
+```
+
+For the internal network, the traffic is outbound.
+
+### Important point
+
+Inbound and outbound are **directional terms**.
+
+The same communication can be inbound from one perspective and outbound from another.
 
 ---
 
-## 17. Destination IP Address
+## Internal vs External Traffic
 
-A **destination IP address** identifies where the packet is being sent.
+### Internal Traffic
+
+Traffic between systems inside the same organization or internal network.
 
 Example:
-
-```text
-Destination IP: 192.168.10.50
-```
-
-The packet is intended for the system associated with that destination address.
-
-Together:
-
-```text
-Source IP              Destination IP
-192.168.10.20  ─────→  192.168.10.50
-```
-
----
-
-## 18. Internal and External Networks
-
-A network can communicate with systems inside the same network or with systems outside the local network.
-
-### Internal communication
 
 ```text
 192.168.10.20 ─────→ 192.168.10.50
 ```
 
-Both addresses are part of the internal network shown in this example.
+### External Traffic
 
-### External communication
+Traffic between an internal system and a system outside the internal network.
+
+Example:
 
 ```text
 192.168.10.20 ─────→ 8.8.8.8
 ```
 
-The internal host is communicating with a public IP address.
-
-The distinction between private and public IP addressing will be covered in greater detail in later lessons.
+The exact definition of "internal" and "external" depends on the network architecture.
 
 ---
 
-## 19. Ports
+## Unicast, Broadcast and Multicast
 
-An IP address identifies a network interface or host address, but a system can run many network services at the same time.
+These terms describe how traffic is delivered.
 
-A **port number** identifies a particular service endpoint used for network communication.
+### Unicast
+
+**Unicast** is communication from one sender to one receiver.
+
+```text
+Host A ─────→ Host B
+```
 
 Example:
+
+```text
+192.168.10.20 ─────→ 192.168.10.50
+```
+
+---
+
+### Broadcast
+
+**Broadcast** is communication from one sender to all devices within a defined broadcast domain.
+
+```text
+         ┌── Host B
+         │
+Host A ──┼── Host C
+         │
+         └── Host D
+```
+
+IPv4 broadcast traffic can use addresses such as:
+
+```text
+255.255.255.255
+```
+
+or a subnet-directed broadcast address depending on the network.
+
+---
+
+### Multicast
+
+**Multicast** is communication from one sender to multiple subscribed receivers.
+
+```text
+             ┌── Host B
+             │
+Host A ──────┼── Host C
+             │
+             └── Host D
+```
+
+Only hosts that have joined the multicast group receive the traffic.
+
+### Comparison
+
+| Type      | Delivery                               |
+| --------- | -------------------------------------- |
+| Unicast   | One-to-one                             |
+| Broadcast | One-to-all within the broadcast domain |
+| Multicast | One-to-selected-many                   |
+
+---
+
+## Basic Network Traffic Flow
+
+A typical communication flow may look like:
+
+```text
+Client
+   │
+   │ 1. Request
+   ▼
+Switch
+   │
+   ▼
+Router / Firewall
+   │
+   ▼
+Internet / Remote Network
+   │
+   ▼
+Server
+   │
+   │ 2. Response
+   ▼
+Client
+```
+
+For a web request, the process can be simplified as:
+
+```text
+User
+ ↓
+Browser
+ ↓
+DNS Resolution
+ ↓
+Destination IP
+ ↓
+TCP Connection
+ ↓
+HTTPS Request
+ ↓
+Web Server
+ ↓
+HTTPS Response
+ ↓
+Browser
+```
+
+This is a conceptual flow. Real communication can involve additional systems, protocols, and network devices.
+
+---
+
+## SOC-Relevant Network Concepts
+
+Network information commonly appears in security logs and alerts.
+
+Important fields include:
+
+### Source IP
+
+The address associated with the system sending traffic.
+
+### Destination IP
+
+The address associated with the intended receiving system.
+
+### Source Port
+
+The source-side port associated with the connection.
+
+### Destination Port
+
+The destination service endpoint.
+
+### Protocol
+
+Examples:
+
+* TCP
+* UDP
+* ICMP
+
+### Timestamp
+
+The time when the event occurred.
+
+### Direction
+
+Whether traffic is inbound or outbound relative to the monitored environment.
+
+### Example event
+
+```text
+Source IP:        192.168.10.20
+Source Port:      51542
+Destination IP:   203.0.113.50
+Destination Port: 443
+Protocol:         TCP
+Direction:        Outbound
+Timestamp:        2026-08-18 12:30:15
+```
+
+A network analyst or SOC analyst can use these fields to understand the communication.
+
+---
+
+## Common Network Security Threats
+
+Understanding common network threats requires familiarity with normal network behavior.
+
+### Port Scanning
+
+An attacker probes multiple ports to identify available services.
+
+Example:
+
+```text
+Attacker
+   │
+   ├──→ Port 22
+   ├──→ Port 80
+   ├──→ Port 443
+   ├──→ Port 3389
+   └──→ Port 8080
+```
+
+---
+
+### Brute-Force Attacks
+
+An attacker repeatedly attempts authentication with different credentials.
+
+Examples:
+
+* SSH brute force
+* RDP brute force
+* Web login brute force
+
+---
+
+### Denial-of-Service
+
+An attacker sends excessive traffic or requests to make a service unavailable.
+
+---
+
+### Man-in-the-Middle
+
+An attacker positions themselves between communicating systems and attempts to intercept or manipulate communication.
+
+---
+
+### DNS Attacks
+
+Possible attacks include:
+
+* DNS spoofing
+* DNS cache poisoning
+* DNS tunneling
+* Malicious DNS requests
+
+---
+
+### ARP Spoofing
+
+An attacker sends fraudulent ARP information to associate their MAC address with another device's IP address.
+
+---
+
+### Network Scanning
+
+Attackers may discover:
+
+* Hosts
+* Services
+* Ports
+* Operating systems
+* Network topology
+
+---
+
+### Command and Control Traffic
+
+Compromised systems may communicate with attacker-controlled infrastructure.
+
+This communication can occur through:
+
+* HTTP/HTTPS
+* DNS
+* Other network protocols
+
+---
+
+## Useful Networking Commands
+
+These commands help inspect and troubleshoot network configuration and connectivity.
+
+### Windows
+
+#### `ipconfig`
+
+Displays IP configuration.
+
+```powershell
+ipconfig
+```
+
+More detailed information:
+
+```powershell
+ipconfig /all
+```
+
+---
+
+#### `ping`
+
+Tests basic IP connectivity.
+
+```powershell
+ping 8.8.8.8
+```
+
+---
+
+#### `tracert`
+
+Shows the path traffic takes toward a destination.
+
+```powershell
+tracert 8.8.8.8
+```
+
+---
+
+#### `nslookup`
+
+Performs DNS queries.
+
+```powershell
+nslookup google.com
+```
+
+---
+
+#### `netstat`
+
+Displays network connections and listening ports.
+
+```powershell
+netstat -ano
+```
+
+---
+
+### Linux
+
+#### `ip addr`
+
+Displays network interfaces and addresses.
+
+```bash
+ip addr
+```
+
+---
+
+#### `ip route`
+
+Displays the routing table.
+
+```bash
+ip route
+```
+
+---
+
+#### `ping`
+
+Tests connectivity.
+
+```bash
+ping 8.8.8.8
+```
+
+---
+
+#### `traceroute`
+
+Shows the path toward a destination.
+
+```bash
+traceroute 8.8.8.8
+```
+
+---
+
+#### `nslookup`
+
+Performs DNS queries.
+
+```bash
+nslookup google.com
+```
+
+---
+
+#### `dig`
+
+Provides detailed DNS information.
+
+```bash
+dig google.com
+```
+
+---
+
+#### `ss`
+
+Displays sockets and network connections.
+
+```bash
+ss -tuln
+```
+
+---
+
+## SOC Analyst Takeaways
+
+The most important networking concepts to remember are:
+
+### 1. Devices communicate using protocols
+
+```text
+Host → Protocol → Host
+```
+
+### 2. IP addresses provide logical network addressing
+
+```text
+192.168.10.20
+```
+
+### 3. MAC addresses operate at the local data-link level
+
+```text
+00:1A:2B:3C:4D:5E
+```
+
+### 4. Ports identify service endpoints
 
 ```text
 192.168.10.20:443
 ```
 
-Here:
+### 5. Protocols define communication behavior
 
-* `192.168.10.20` = IP address
-* `443` = port number
+Examples:
 
-### Common port numbers
+```text
+TCP
+UDP
+DNS
+HTTP
+HTTPS
+ICMP
+ARP
+DHCP
+```
 
-| Port | Common service |
-| ---: | -------------- |
-|   22 | SSH            |
-|   53 | DNS            |
-|   80 | HTTP           |
-|  443 | HTTPS          |
-| 3389 | RDP            |
+### 6. Packets and frames are different
 
-Port numbers will be studied in much greater detail later.
+```text
+Frame → Data Link Layer
+Packet → Network Layer
+```
+
+### 7. Traffic has a direction
+
+```text
+Inbound
+Outbound
+```
+
+### 8. Traffic can be classified by scope
+
+```text
+Internal
+External
+```
+
+### 9. Communication can be one-to-one or one-to-many
+
+```text
+Unicast
+Broadcast
+Multicast
+```
+
+### 10. Common network information
+
+When reading a network event, identify:
+
+```text
+Who?
+   ↓
+Source IP / Source Port
+
+Where?
+   ↓
+Destination IP / Destination Port
+
+What?
+   ↓
+Protocol / Service
+
+When?
+   ↓
+Timestamp
+
+Which direction?
+   ↓
+Inbound / Outbound
+```
 
 ---
 
-## 20. Protocol + IP + Port
-
-A useful way to describe network communication is to consider:
+## Quick Reference
 
 ```text
-Protocol + Source + Destination + Port
+Network
+ ├── Hosts
+ ├── Switches
+ ├── Routers
+ ├── Firewalls
+ └── Servers
+
+Addressing
+ ├── MAC Address
+ └── IP Address
+
+Transport
+ ├── TCP
+ └── UDP
+
+Common Protocols
+ ├── ARP
+ ├── DNS
+ ├── DHCP
+ ├── HTTP
+ ├── HTTPS
+ └── ICMP
+
+Traffic
+ ├── Inbound / Outbound
+ ├── Internal / External
+ └── Unicast / Broadcast / Multicast
+
+Data Units
+ ├── Segment
+ ├── Datagram
+ ├── Packet
+ └── Frame
 ```
-
-Example:
-
-```text
-Protocol:        TCP
-Source:          192.168.10.20
-Destination:     192.168.10.50
-Destination Port: 443
-```
-
-This provides more information about the communication than an IP address alone.
 
 ---
 
-## 21. Example of Complete Communication
-
-Suppose a Windows computer accesses a web server.
-
-The communication might conceptually look like this:
-
-```text
-Client
-192.168.10.20
-      │
-      │ TCP
-      │ Destination Port: 443
-      ▼
-Web Server
-203.0.113.10
-```
-
-The client sends traffic toward the server.
-
-The server then sends traffic back:
-
-```text
-203.0.113.10:443
-        │
-        ▼
-192.168.10.20
-```
-
-Network communication is generally bidirectional, although one system may initially initiate the connection.
-
----
-
-## 22. Network Communication Example
-
-Consider the following simplified network event:
-
-```text
-Source IP:         192.168.10.20
-Destination IP:    192.168.10.50
-Protocol:          TCP
-Destination Port:  443
-```
-
-The basic information can be interpreted as:
-
-* `192.168.10.20` is the source address.
-* `192.168.10.50` is the destination address.
-* TCP is the transport protocol.
-* Port `443` is the destination service endpoint.
-* The source is communicating toward the destination.
-
-At this stage, we should not assume anything beyond the information provided by the event.
-
----
-
-# Key Terms
-
-| Term               | Definition                                                                  |
-| ------------------ | --------------------------------------------------------------------------- |
-| **Network**        | A collection of connected devices that can communicate                      |
-| **Host**           | A device connected to a network                                             |
-| **Client**         | A system or application that requests a service                             |
-| **Server**         | A system that provides a service                                            |
-| **Switch**         | A device that connects devices within a network                             |
-| **Router**         | A device that connects different networks                                   |
-| **Firewall**       | A security control that allows or blocks network traffic according to rules |
-| **Protocol**       | A set of rules used for network communication                               |
-| **Packet**         | A unit of data at the network layer                                         |
-| **Source IP**      | IP address associated with the sender                                       |
-| **Destination IP** | IP address of the intended receiver                                         |
-| **Port**           | A numerical identifier for a network service endpoint                       |
-
----
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Why Networking Matters in SOC
-
-Content will be added here.
-
-## Network Components
-
-Content will be added here.
-
-## How Network Communication Works
-
-Content will be added here.
-
-## Network Types
-
-Content will be added here.
-
-## Client-Server vs Peer-to-Peer
-
-Content will be added here.
-
-## Network Addressing
-
-Content will be added here.
-
-## MAC Address vs IP Address
-
-Content will be added here.
-
-## Ports and Protocols
-
-Content will be added here.
-
-## Packets and Frames
-
-Content will be added here.
-
-## Inbound vs Outbound Traffic
-
-Content will be added here.
-
-## Internal vs External Traffic
-
-Content will be added here.
-
-## Unicast, Broadcast and Multicast
-
-Content will be added here.
-
-## Basic Network Traffic Flow
-
-Content will be added here.
-
-## SOC-Relevant Network Concepts
-
-Content will be added here.
-
-## Common Network Security Threats
-
-Content will be added here.
-
-## Useful Networking Commands
-
-Content will be added here.
-
-## SOC Analyst Takeaways
-
-Content will be added here.
+## Conclusion
+
+Networking fundamentals provide the foundation for understanding how systems communicate.
+
+A strong understanding of:
+
+* Network components
+* Network types
+* Client-server communication
+* Network addressing
+* MAC and IP addresses
+* Ports and protocols
+* Packets and frames
+* Traffic direction
+* Traffic scope
+* Network traffic flow
+
+is essential before moving into more advanced networking topics such as **OSI and TCP/IP models, IPv4 addressing, subnetting, routing, DNS, DHCP, TCP/UDP, NAT, and firewall operation**.
