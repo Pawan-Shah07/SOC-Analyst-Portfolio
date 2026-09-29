@@ -630,7 +630,7 @@ This project therefore serves as a practical foundation for further development 
 
 ## 👤 Project Author
 
-**https://github.com/Pawan-Shah07/SOC-Analyst-Portfolio/blob/main/01-Projects/Virtual-SOC-Lab-Using-Wazuh**
+**https://github.com/Pawan-Shah07/**
 
 This project was developed as a hands-on cybersecurity laboratory to demonstrate practical security monitoring, detection, investigation, and technical documentation capabilities.
 
